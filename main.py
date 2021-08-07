@@ -1,5 +1,5 @@
-import matplotlib.pyplot as plt
 import numpy as np
+
 from utils.dataframes_utils import read_dataset, filter_dataset
 from utils.visualization_utils import visualize_histogram, visualize_scatter_plot, visualize_correlation_matrix
 
