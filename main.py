@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from utils.dataframes_utils import read_dataset, filter_dataset
-from utils.visualization_utils import visualize_histogram, visualize_scatter_plot
+from utils.visualization_utils import visualize_histogram, visualize_scatter_plot, visualize_correlation_matrix
 
 
 def main():
@@ -14,6 +14,7 @@ def main():
     houses_prices_df[log_sale_price] = np.log(houses_prices_df[sale_price])
 
     for y_column in [sale_price, log_sale_price]:
+        visualize_correlation_matrix(houses_prices_df)
         visualize_histogram(houses_prices_df[y_column].values, y_column, 'Houses Prices')
         for column_to_keep in columns_to_keep:
             visualize_scatter_plot(houses_prices_df, column_to_keep, y_column)

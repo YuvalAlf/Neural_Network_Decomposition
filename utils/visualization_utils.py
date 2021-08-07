@@ -29,3 +29,8 @@ def visualize_scatter_plot(dataframe, x_entry, y_entry):
     sns.scatterplot(data=dataframe, x=x_entry, y=y_entry, alpha=0.5, color='g')
     plt.xlabel(x_entry)
     plt.ylabel(y_entry)
+
+
+@visualize_plot
+def visualize_correlation_matrix(dataframe):
+    sns.heatmap(dataframe.corr(), cmap="YlGnBu", linewidth=1, vmin=-1, vmax=1, annot=True, fmt='.1f')
