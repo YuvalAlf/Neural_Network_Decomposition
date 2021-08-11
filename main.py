@@ -1,5 +1,6 @@
 import numpy as np
 
+from neural_networks.regression_network import RegressionNetwork
 from utils.dataframes_utils import read_dataset, filter_dataset
 from utils.visualization_utils import visualize_histogram, visualize_scatter_plot, visualize_correlation_matrix
 
@@ -19,8 +20,9 @@ def main():
         visualize_histogram(houses_prices_df[y_column].values, y_column, 'Houses Prices')
         for x_column in x_columns:
             visualize_scatter_plot(houses_prices_df, x_column, y_column)
-        # for build_options in (1,);
-        #     nn = build_full_connected_nn(*build_options)
+        for inner_layer_sizes in ([6, 6], [12]):
+            reg_nn = RegressionNetwork(len(x_columns), inner_layer_sizes, 1)
+            reg_nn.train(houses_prices_df[x_columns].values, houses_prices_df[y_column].values)
 
 
 if __name__ == '__main__':
