@@ -4,6 +4,7 @@ from pandas import DataFrame
 
 from utils.data_frame_utils import read_dataset, filter_data_frame, add_log_column
 from utils.functional_utils import run_on_true
+from utils.normalizer import DataFrameNormalizer
 from utils.visualization_utils import visualize_histogram, visualize_scatter_plot, visualize_correlation_matrix
 
 
@@ -21,12 +22,12 @@ def main():
     log_sale_price = add_log_column(houses_prices, sale_price)
 
     for y_column in [sale_price, log_sale_price]:
-        run_on_true(True, lambda: visualize_correlation_matrix(houses_prices_data_frame, y_column))
-        run_on_true(True, lambda: visualize_histogram(houses_prices[y_column].values, y_column, 'Houses Prices'))
-        for x_column in x_columns:
-            run_on_true(True, lambda: visualize_scatter_plot(houses_prices, x_column, y_column))
+        # run_on_true(True, lambda: visualize_correlation_matrix(houses_prices, y_column))
+        # run_on_true(True, lambda: visualize_histogram(houses_prices[y_column].values, y_column, 'Houses Prices'))
+        # for x_column in x_columns:
+        #     run_on_true(True, lambda: visualize_scatter_plot(houses_prices, x_column, y_column))
 
-        # houses_prices_df = normalize_df(houses_prices_df)
+        normalized_data_frame, normalizer = DataFrameNormalizer.normalize_data_frame(houses_prices)
         # for inner_layer_sizes in ([12],):
         #     reg_nn = RegressionNetwork(len(x_columns), inner_layer_sizes, 1)
         #     name = f"{y_column}_{mkstring(reg_nn.layers, '[', ',', ']')}"
