@@ -1,28 +1,36 @@
-import numpy as np
+from typing import List
 
-from neural_networks.regression_network import RegressionNetwork
-from utils.dataframes_utils import read_dataset, filter_dataset
+from pandas import DataFrame
+
+from utils.data_frame_utils import read_dataset, filter_data_frame, add_log_column
+from utils.functional_utils import run_on_true
 from utils.visualization_utils import visualize_histogram, visualize_scatter_plot, visualize_correlation_matrix
 
 
-def main():
-    sale_price = 'SalePrice'
-    log_sale_price = 'Log(SalePrice)'
-    sale_price_column = 'SalePrice'
+def read_houses_prices_dataset(path: str) -> (List[str], str, DataFrame):
+    data_frame = read_dataset(path)
     x_columns = ['LotArea', 'OverallQual', 'OverallCond', 'YearBuilt', 'YearRemodAdd', 'BsmtUnfSF', 'TotalBsmtSF',
-                       'GrLivArea', 'TotRmsAbvGrd', 'GarageCars', 'GarageArea', 'YrSold']
-    houses_prices_df = read_dataset('datasets/houses_prices.csv')
-    houses_prices_df = filter_dataset(houses_prices_df, x_columns + [sale_price_column])
-    houses_prices_df[log_sale_price] = np.log(houses_prices_df[sale_price])
+                 'GrLivArea', 'TotRmsAbvGrd', 'GarageCars', 'GarageArea', 'YrSold']
+    y_column = 'SalePrice'
+    filtered_data_frame = filter_data_frame(data_frame, *x_columns, y_column)
+    return x_columns, y_column, filtered_data_frame
+
+
+def main():
+    x_columns, sale_price, houses_prices = read_houses_prices_dataset('datasets/houses_prices.csv')
+    log_sale_price = add_log_column(houses_prices, sale_price)
 
     for y_column in [sale_price, log_sale_price]:
-        visualize_correlation_matrix(houses_prices_df, y_column)
-        visualize_histogram(houses_prices_df[y_column].values, y_column, 'Houses Prices')
+        run_on_true(True, lambda: visualize_correlation_matrix(houses_prices_data_frame, y_column))
+        run_on_true(True, lambda: visualize_histogram(houses_prices[y_column].values, y_column, 'Houses Prices'))
         for x_column in x_columns:
-            visualize_scatter_plot(houses_prices_df, x_column, y_column)
-        for inner_layer_sizes in ([6, 6], [12]):
-            reg_nn = RegressionNetwork(len(x_columns), inner_layer_sizes, 1)
-            reg_nn.train(houses_prices_df[x_columns].values, houses_prices_df[y_column].values)
+            run_on_true(True, lambda: visualize_scatter_plot(houses_prices, x_column, y_column))
+
+        # houses_prices_df = normalize_df(houses_prices_df)
+        # for inner_layer_sizes in ([12],):
+        #     reg_nn = RegressionNetwork(len(x_columns), inner_layer_sizes, 1)
+        #     name = f"{y_column}_{mkstring(reg_nn.layers, '[', ',', ']')}"
+        #     median_score = reg_nn.train(houses_prices_df[x_columns].values, houses_prices_df[y_column].values, name)
 
 
 if __name__ == '__main__':
